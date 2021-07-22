@@ -1,4 +1,4 @@
-# cerebro-command-router
+# Cerebro-Command-Router
 
 > A tool for CerebroApp developers
 
