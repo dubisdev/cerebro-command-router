@@ -75,6 +75,8 @@ myRouter.invalidRoute({
 });
 ```
 
+⚠️ This method must be at the end of the plugin (after all the normal subcommand routes)
+
 ### Full Example
 
 You can consult a complete example in the "Examples" folder.
