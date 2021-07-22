@@ -1,6 +1,6 @@
 {
   "name": "cerebro-command-router",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0",
   "description": "Tool for CerebroApp developers that allows to work with subcommands",
   "main": "index.js",
   "repository": "https://github.com/dubisdev/cerebro-command-router",
