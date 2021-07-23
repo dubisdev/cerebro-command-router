@@ -17,7 +17,7 @@ export default class CerebroRouter {
 	}
 
 	invalidRoute(screen) {
-		if (this.shownPages === 0 && this.term.includes("tds")) {
+		if (this.shownPages === 0 && this.term.includes(this.command)) {
 			this.display(screen);
 		}
 	}
