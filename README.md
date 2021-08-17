@@ -47,8 +47,8 @@ const myRouter = new CerebroRouter({
 ```js
 /*
 CerebroRouter.route(command: string,
-					displayElement: see_cerebro_documentation,
-					options: object)
+			displayElement: see_cerebro_documentation,
+			options: object)
 */
 
 myRouter.route("your_first_subcommand", {
