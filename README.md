@@ -81,7 +81,7 @@ Text written by user
 `tab key pressed`
 Resultant text
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c0df121f-9fbc-4ddf-9779-6780b57f4927/Untitled.png)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c0df121f-9fbc-4ddf-9779-6780b57f4927/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210817%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210817T133416Z&X-Amz-Expires=86400&X-Amz-Signature=3f2624c5496249f49703d8637230a99a1d98461fc58331a8d15713829889fea8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22)
 
 With autocompleteAll false:
 
@@ -95,7 +95,7 @@ Text written by user
 
 Resultant text
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/308a9685-0cc1-4607-b801-dffee674ecf3/Untitled.png)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/308a9685-0cc1-4607-b801-dffee674ecf3/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210817%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210817T133440Z&X-Amz-Expires=86400&X-Amz-Signature=d7cd0e39b07cc165f570134de0dc1dfe64c5fbb81b9c8da5216d28766b06f947&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22)
 
 ### **Invalid subcommand routing**
 
