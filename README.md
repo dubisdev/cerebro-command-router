@@ -76,7 +76,7 @@ command + subcommand + some text —> command + subcommand + some text
 
 Text written by user
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/71438056-b361-4e62-abc8-212f9d55485c/Untitled.png)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/47e99c60-245b-415c-af7a-5a3d6aeab5f5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210817%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210817T125731Z&X-Amz-Expires=86400&X-Amz-Signature=fb354f66101a3d36af55b03e07a7703078e2b7a19b44b11304b2b6c9ce87cc9a&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22)
 
 `tab key pressed`
 Resultant text
@@ -89,7 +89,7 @@ command + subcommand + some text —> command + subcommand
 
 Text written by user
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/47e99c60-245b-415c-af7a-5a3d6aeab5f5/Untitled.png)
+![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/47e99c60-245b-415c-af7a-5a3d6aeab5f5/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210817%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210817T125731Z&X-Amz-Expires=86400&X-Amz-Signature=fb354f66101a3d36af55b03e07a7703078e2b7a19b44b11304b2b6c9ce87cc9a&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22)
 
 `tab key pressed`
 
