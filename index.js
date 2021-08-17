@@ -6,11 +6,17 @@ export default class CerebroRouter {
 		this.shownPages = 0;
 	}
 
-	route(subcommand, screen) {
+	route(subcommand, screen, options = { autocompleteAll: true }) {
 		if (this.isMatch(subcommand, this.term)) {
 			this.display({
 				...screen,
-				term: this.command + " " + subcommand,
+				term: options.autocompleteAll
+					? this.command +
+					  " " +
+					  subcommand +
+					  " " +
+					  (getSubCommandText(this.term) || "")
+					: this.command + " " + subcommand,
 			});
 			++this.shownPages;
 		}
