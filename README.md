@@ -12,15 +12,15 @@ This is a utility for developing cerebro plugins.
 
 ```sh
 npm install cerebro-command-router
-
 or
-
 yarn add cerebro-command-router
 ```
 
-#### Import the CerebroRouter utility:
+# Initial configuration
 
-```js
+### **Import the CerebroRouter utility:**
+
+```jsx
 import CerebroRouter from "cerebro-command-router";
 
 //or
@@ -28,11 +28,11 @@ import CerebroRouter from "cerebro-command-router";
 const CerebroRouter = require("cerebro-command-router");
 ```
 
-### Configure the router by creating a instance with:
+### **Configure the router by creating an instance with:**
 
-- command: string - The main command of your app (one word)
-- term: string - The complete string query (view Cerebro documentation)
-- display: function - The cerebro display function (view Cerebro documentation)
+- `command: string` - The main command of your app (one word)
+- `term: string` - The complete string query (view Cerebro documentation)
+- `display: function` - The cerebro display function (view Cerebro documentation)
 
 ```js
 const myRouter = new CerebroRouter({
@@ -42,10 +42,14 @@ const myRouter = new CerebroRouter({
 });
 ```
 
-### Create the routes for your subcommands
+### **Create the routes for your subcommands**
 
 ```js
-//CerebroRouter.route(command: string, displayElement: see_cerebro_documentation)
+/*
+CerebroRouter.route(command: string,
+					displayElement: see_cerebro_documentation,
+					options: object)
+*/
 
 myRouter.route("your_first_subcommand", {
 	icon: icon,
@@ -60,34 +64,66 @@ myRouter.route("your_second_subcommand", {
 });
 ```
 
-### Invalid subcommand routing
+### The "Options" object.
 
-You can choose whether to show a bad subcommand message or to show nothing.
-By default, nothing will simply appear.
-To display a message you can use `CerebroRouter.invalidRoute(displayElement: see_cerebro_documentation)`
+For now, you can configure one interesting parameter: the autocompletion when you use the `tab key`. By default, when the subcommand is written with subcommand text, if `tab key` is pressed nothing will happen (term = term), but if `autocompleteAll: false` the result when `tab key` is pressed will be only command + subcommand.
 
-```js
+#### Example:
+
+With autocompleteAll deafult (true):
+
+command + subcommand + some text —> command + subcommand + some text
+
+Text written by user
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/71438056-b361-4e62-abc8-212f9d55485c/Untitled.png)
+
+`tab key pressed`
+Resultant text
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/c0df121f-9fbc-4ddf-9779-6780b57f4927/Untitled.png)
+
+With autocompleteAll false:
+
+command + subcommand + some text —> command + subcommand
+
+Text written by user
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/47e99c60-245b-415c-af7a-5a3d6aeab5f5/Untitled.png)
+
+`tab key pressed`
+
+Resultant text
+
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/308a9685-0cc1-4607-b801-dffee674ecf3/Untitled.png)
+
+### **Invalid subcommand routing**
+
+You can choose whether to show a bad subcommand message or to show nothing. By default, nothing will simply appear. To display a message you can use `CerebroRouter.invalidRoute(displayElement: see_cerebro_documentation)`
+
+```jsx
 myRouter.invalidRoute({
 	icon: icon,
 	title: `Invalid Command :( `,
 });
 ```
 
-⚠️ This method must be at the end of the plugin (after all the normal subcommand routes)
+![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1cb94e2b-358e-45e7-89d8-5a9b557856b6/Untitled.png)
 
-### Get the text of a subcommand so that you can work with it
+⚠️ This method must be at the end of the plugin (after all the normal subcommand routes)
 
-Sometimes, to work with a subcommand, you will need to know the rest of the text that the user has written. For example, in the cerebro-todoist plugin, after the command "tds new << rest of text >>", the rest of the text is added to a note.
-To do this, you can use the "getSubCommandText" function that you can import from the package itself.
+### **Get the text of a subcommand so that you can work with it**
 
-```js
+Sometimes, to work with a subcommand, you will need to know the rest of the text that the user has written. For example, in the cerebro-todoist plugin, after the command "tds new << rest of text >>", the rest of the text is added to a note. To do this, you can use the "getSubCommandText" function that you can import from the package itself.
+
+```jsx
 import { getSubCommandText } from "cerebro-command-router";
 
 //or
 
 const { getSubCommandText } = require("cerebro-command-router");
 
-console.log(getSubCommandText("example com1 text an emoji 💫")); //"text an emoji 💫"
+console.log(getSubCommandText("ex com1 text and emoji 💫")); //"text and emoji 💫"
 ```
 
 ### Full Example
