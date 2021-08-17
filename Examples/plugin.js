@@ -1,5 +1,5 @@
 import icon from "./icons";
-import CerebroRouter from "./cerebro-command-routing/index.js";
+import CerebroRouter from "cerebro-command-router";
 
 if (!Notification.permission) Notification.requestPermission();
 
