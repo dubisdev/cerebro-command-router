@@ -70,7 +70,7 @@ For now, you can configure one interesting parameter: the autocompletion when yo
 
 #### Example:
 
-With autocompleteAll deafult (true):
+#### With autocompleteAll deafult (true):
 
 command + subcommand + some text —> command + subcommand + some text
 
@@ -83,7 +83,7 @@ Resultant text
 
 ![Untitled](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c0df121f-9fbc-4ddf-9779-6780b57f4927/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210817%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210817T133416Z&X-Amz-Expires=86400&X-Amz-Signature=3f2624c5496249f49703d8637230a99a1d98461fc58331a8d15713829889fea8&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22)
 
-With autocompleteAll false:
+#### With autocompleteAll false:
 
 command + subcommand + some text —> command + subcommand
 
