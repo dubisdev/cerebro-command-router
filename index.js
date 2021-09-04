@@ -1,24 +1,93 @@
 export default class CerebroRouter {
-	constructor({ command, term, display }) {
+	constructor({ command, term, display, hide }) {
 		this.command = command;
 		this.term = term;
 		this.display = display;
 		this.shownPages = 0;
+		this.hide = hide;
 	}
 
-	route(subcommand, screen, options = { autocompleteAll: true }) {
+	route(
+		subcommand,
+		screen,
+		{
+			autocompleteAll = true,
+			showOnlyInFullMatch = false,
+			isAsyncArrayGenerator = false,
+			loadingMessage = "Getting Async Screens...",
+			displayArrayGenerator = () => [],
+		} = {}
+	) {
 		if (this.isMatch(subcommand, this.term)) {
-			this.display({
-				...screen,
-				term: options.autocompleteAll
-					? this.command +
-					  " " +
-					  subcommand +
-					  " " +
-					  (getSubCommandText(this.term) || "")
-					: this.command + " " + subcommand,
-			});
-			++this.shownPages;
+			const autocompleteText = autocompleteAll
+				? this.command +
+				  " " +
+				  subcommand +
+				  " " +
+				  (getSubCommandText(this.term) || "")
+				: this.command + " " + subcommand + " ";
+
+			if (showOnlyInFullMatch !== true) {
+				this.display({
+					...screen,
+					term: autocompleteText,
+				});
+				++this.shownPages;
+				return;
+			}
+
+			if (
+				showOnlyInFullMatch === true &&
+				!this.isFullMatch(subcommand, this.term)
+			) {
+				const { icon, title } = screen;
+
+				this.display({
+					icon,
+					title,
+					term: autocompleteText,
+				});
+				++this.shownPages;
+				return;
+			}
+
+			if (
+				showOnlyInFullMatch === true &&
+				this.isFullMatch(subcommand, this.term)
+			) {
+				const id = Math.random() * 10;
+				const { icon } = screen;
+				if (isAsyncArrayGenerator === true) {
+					this.display({
+						id: `${id}`,
+						icon,
+						title: loadingMessage,
+					});
+					++this.shownPages;
+
+					(async () => {
+						const displayArray = await displayArrayGenerator();
+						this.hide(`${id}`);
+						displayArray.map((display) => {
+							this.display({
+								icon,
+								...display,
+							});
+							++this.shownPages;
+						});
+
+						return;
+					})();
+				} else {
+					const displayArray = displayArrayGenerator();
+					displayArray.map((display) => {
+						this.display({ icon, ...display });
+						++this.shownPages;
+					});
+
+					return;
+				}
+			}
 		}
 	}
 
@@ -28,14 +97,21 @@ export default class CerebroRouter {
 		}
 	}
 
-	isMatch(command, term) {
+	isMatch(subcommand, term) {
 		let match = this.command.toLowerCase() === getCommand(term).toLowerCase();
 		if (match) {
 			return (
 				!getSubCommand(term) ||
-				command.toLowerCase().startsWith(getSubCommand(term))
+				subcommand.toLowerCase().startsWith(getSubCommand(term))
 			);
 		}
+	}
+
+	isFullMatch(subcommand, term) {
+		if (!this.isMatch(subcommand, term)) return false;
+		if (!getSubCommand(term)) return false;
+
+		return getSubCommand(term).toLowerCase() === subcommand;
 	}
 }
 
