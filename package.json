@@ -1,8 +1,9 @@
 {
   "name": "cerebro-command-router",
-  "version": "1.2.0",
+  "version": "",
   "description": "Tool for CerebroApp developers that allows to work with subcommands",
-  "main": "index.js",
+  "type": "module",
+  "main": "dist/index.js",
   "repository": "https://github.com/dubisdev/cerebro-command-router",
   "author": "dubisdev",
   "license": "MIT",

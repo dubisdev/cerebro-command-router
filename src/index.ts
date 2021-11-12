@@ -1,5 +1,9 @@
-export default class CerebroRouter {
-	constructor({ command, term, display, hide }) {
+import { ConstructorParams } from "./definitions/router_types";
+import { CerebroRouter } from "./definitions/router_types";
+CerebroRouter.lol
+
+export default class CerebroRouter implements CerebroRouter{
+	constructor({ command, term, display, hide }: ConstructorParams) {
 		this.command = command;
 		this.term = term;
 		this.display = display;
