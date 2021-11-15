@@ -1,8 +1,22 @@
-import { ConstructorParams } from "./definitions/router_types";
-import { CerebroRouter } from "./definitions/router_types";
-CerebroRouter.lol
+import {
+	CerebroDisplayFunction,
+	CerebroScreen,
+} from "definitions/cerebro_types";
 
-export default class CerebroRouter implements CerebroRouter{
+type ConstructorParams = {
+	command: string;
+	term: string;
+	display: CerebroDisplayFunction;
+	hide: Function;
+};
+
+export default class CerebroRouter {
+	private shownPages: number;
+	command: string;
+	term: string;
+	display: CerebroDisplayFunction;
+	hide: Function;
+
 	constructor({ command, term, display, hide }: ConstructorParams) {
 		this.command = command;
 		this.term = term;
@@ -11,18 +25,19 @@ export default class CerebroRouter implements CerebroRouter{
 		this.hide = hide;
 	}
 
-	route(
-		subcommand,
-		screen,
+	async route(
+		subcommand: string,
+		screen: CerebroScreen,
 		{
 			autocompleteAll = true,
 			showOnlyInFullMatch = false,
 			isAsyncArrayGenerator = false,
 			loadingMessage = "Getting Async Screens...",
-			displayArrayGenerator = () => [],
+			displayArrayGenerator = (): CerebroScreen[] => [{}],
 		} = {}
 	) {
 		if (this.isMatch(subcommand, this.term)) {
+			// generate autocompleted text (depends on config option autocompleteAll)
 			const autocompleteText = autocompleteAll
 				? this.command +
 				  " " +
@@ -31,60 +46,42 @@ export default class CerebroRouter implements CerebroRouter{
 				  (getSubCommandText(this.term) || "")
 				: this.command + " " + subcommand + " ";
 
-			if (showOnlyInFullMatch !== true) {
-				this.display({
-					...screen,
-					term: autocompleteText,
-				});
+			// if not show only in full match then show just now, no more checks needed ;)
+			if (!showOnlyInFullMatch) {
+				this.display({ ...screen, term: autocompleteText });
 				++this.shownPages;
 				return;
 			}
 
-			if (
-				showOnlyInFullMatch === true &&
-				!this.isFullMatch(subcommand, this.term)
-			) {
-				const { icon, title } = screen;
+			// if is not full match and full match is needed
+			if (!this.isFullMatch(subcommand, this.term)) {
+				// const { icon, title } = screen;
 
-				this.display({
-					icon,
-					title,
-					term: autocompleteText,
-				});
-				++this.shownPages;
+				// this.display({ icon, title, term: autocompleteText });
+				// ++this.shownPages;
 				return;
 			}
 
-			if (
-				showOnlyInFullMatch === true &&
-				this.isFullMatch(subcommand, this.term)
-			) {
-				const id = Math.random() * 10;
+			// if is full match and full match is needed
+			if (this.isFullMatch(subcommand, this.term)) {
 				const { icon } = screen;
-				if (isAsyncArrayGenerator === true) {
-					this.display({
-						id: `${id}`,
-						icon,
-						title: loadingMessage,
-					});
+				if (isAsyncArrayGenerator) {
+					// show a loading display while displays are being generated
+					const id = Math.random() * 10;
+					this.display({ id: `${id}`, icon, title: loadingMessage });
 					++this.shownPages;
 
-					(async () => {
-						const displayArray = await displayArrayGenerator();
-						this.hide(`${id}`);
-						displayArray.map((display) => {
-							this.display({
-								icon,
-								...display,
-							});
-							++this.shownPages;
-						});
+					const displayArray = await displayArrayGenerator();
+					this.hide(`${id}`);
+					--this.shownPages;
 
-						return;
-					})();
+					displayArray.forEach((display) => {
+						this.display({ icon, ...display });
+						++this.shownPages;
+					});
 				} else {
 					const displayArray = displayArrayGenerator();
-					displayArray.map((display) => {
+					displayArray.forEach((display) => {
 						this.display({ icon, ...display });
 						++this.shownPages;
 					});
@@ -95,26 +92,30 @@ export default class CerebroRouter implements CerebroRouter{
 		}
 	}
 
-	invalidRoute(screen) {
+	invalidRoute(screen: CerebroScreen) {
 		if (this.shownPages === 0 && this.term.includes(this.command)) {
 			this.display(screen);
 		}
 	}
 
-	isMatch(subcommand, term) {
+	isMatch(subcommand: string, term: string) {
 		let match = this.command.toLowerCase() === getCommand(term).toLowerCase();
 		if (match) {
-			return (
-				!getSubCommand(term) ||
-				subcommand.toLowerCase().startsWith(getSubCommand(term))
-			);
+			// if not subcommand introduced, all subcommands are valid
+			const noSubcommandIntroduced = !getSubCommand(term);
+
+			// match if not subcommand introduced or if subcommand starts by introduced subcommand
+			const isValidMatch =
+				noSubcommandIntroduced ||
+				subcommand.toLowerCase().startsWith(getSubCommand(term));
+
+			return isValidMatch;
 		}
 	}
 
-	isFullMatch(subcommand, term) {
+	isFullMatch(subcommand: string, term: string) {
 		if (!this.isMatch(subcommand, term)) return false;
 		if (!getSubCommand(term)) return false;
-
 		return getSubCommand(term).toLowerCase() === subcommand;
 	}
 }
@@ -122,19 +123,15 @@ export default class CerebroRouter implements CerebroRouter{
 /**
  *Method for getting comand from all the console
  */
-function getCommand(longString) {
-	return longString.split(" ")[0]; //take second word (the command)
-}
+const getCommand = (longString: string) => longString.split(" ")[0]; //take second word (the command)
 
 /**
  *Method for getting subcomand from all the console
  */
-function getSubCommand(longString) {
-	return longString.split(" ")[1]; //take second word (the command)
-}
+const getSubCommand = (longString: string) => longString.split(" ")[1]; //take second word (the command)
 
-export function getSubCommandText(command) {
-	let response = command.split(" "); //take first word (the command)
+export function getSubCommandText(command: string) {
+	let response: any = command.split(" "); //take first word (the command)
 	response.shift();
 	response.shift();
 	response = response.join(" ");

@@ -3,6 +3,7 @@
   "version": "",
   "description": "Tool for CerebroApp developers that allows to work with subcommands",
   "type": "module",
+  "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "repository": "https://github.com/dubisdev/cerebro-command-router",
   "author": "dubisdev",
@@ -11,5 +12,8 @@
     "cerebro",
     "cerebro-developer",
     "command"
-  ]
+  ],
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  }
 }
