@@ -1,21 +1,17 @@
 import {
-	CerebroDisplayFunction,
+	ConstructorParams,
 	CerebroScreen,
-} from "definitions/cerebro_types";
-
-type ConstructorParams = {
-	command: string;
-	term: string;
-	display: CerebroDisplayFunction;
-	hide: Function;
-};
+	routeConfig,
+	CerebroDisplayFunction,
+	CerebroHideFunction,
+} from "definitions";
 
 export default class CerebroRouter {
-	private shownPages: number;
-	command: string;
-	term: string;
-	display: CerebroDisplayFunction;
-	hide: Function;
+	private shownPages;
+	private command: string;
+	private term: string;
+	private display: CerebroDisplayFunction;
+	private hide: CerebroHideFunction;
 
 	constructor({ command, term, display, hide }: ConstructorParams) {
 		this.command = command;
@@ -33,8 +29,8 @@ export default class CerebroRouter {
 			showOnlyInFullMatch = false,
 			isAsyncArrayGenerator = false,
 			loadingMessage = "Getting Async Screens...",
-			displayArrayGenerator = (): CerebroScreen[] => [{}],
-		} = {}
+			displayArrayGenerator,
+		}: routeConfig
 	) {
 		if (this.isMatch(subcommand, this.term)) {
 			// generate autocompleted text (depends on config option autocompleteAll)
@@ -80,7 +76,7 @@ export default class CerebroRouter {
 						++this.shownPages;
 					});
 				} else {
-					const displayArray = displayArrayGenerator();
+					const displayArray = await displayArrayGenerator();
 					displayArray.forEach((display) => {
 						this.display({ icon, ...display });
 						++this.shownPages;
@@ -98,7 +94,7 @@ export default class CerebroRouter {
 		}
 	}
 
-	isMatch(subcommand: string, term: string) {
+	private isMatch(subcommand: string, term: string) {
 		let match = this.command.toLowerCase() === getCommand(term).toLowerCase();
 		if (match) {
 			// if not subcommand introduced, all subcommands are valid
@@ -113,7 +109,7 @@ export default class CerebroRouter {
 		}
 	}
 
-	isFullMatch(subcommand: string, term: string) {
+	private isFullMatch(subcommand: string, term: string) {
 		if (!this.isMatch(subcommand, term)) return false;
 		if (!getSubCommand(term)) return false;
 		return getSubCommand(term).toLowerCase() === subcommand;
@@ -131,10 +127,11 @@ const getCommand = (longString: string) => longString.split(" ")[0]; //take seco
 const getSubCommand = (longString: string) => longString.split(" ")[1]; //take second word (the command)
 
 export function getSubCommandText(command: string) {
-	let response: any = command.split(" "); //take first word (the command)
-	response.shift();
-	response.shift();
-	response = response.join(" ");
+	let words = command.split(" "); //take first word (the command)
+	// delete command
+	words.shift();
+	words.shift();
+	let response = words.join(" ");
 
 	//returns undefined so the api can create a _no_content_ task
 	if (response === "") return undefined;
