@@ -5,26 +5,22 @@ export type ConstructorParams = {
 	hide: CerebroHideFunction;
 };
 
-export type routeConfig = {
-	isAsyncArrayGenerator?: boolean;
+export type routeConfig = (routeConfigSync | routeConfigAsync) & {
 	autocompleteAll?: boolean;
 	showOnlyInFullMatch?: boolean;
-} & (routeConfigSync | routeConfigAsync);
+};
 
 type routeConfigSync = {
 	loadingMessage?: undefined;
 	isAsyncArrayGenerator?: false;
-	displayArrayGenerator: () => CerebroScreen[];
+	displayArrayGenerator?: () => CerebroScreen[];
 };
 
 type routeConfigAsync = {
-	isAsyncArrayGenerator: true;
+	isAsyncArrayGenerator?: true;
 	loadingMessage?: string;
-	displayArrayGenerator: () => Promise<CerebroScreen[]>;
+	displayArrayGenerator?: () => Promise<CerebroScreen[]>;
 };
-
-export declare function getSubCommandText(command: string): any;
-export {};
 
 import { ReactElement } from "react";
 
@@ -35,7 +31,7 @@ export declare type CerebroScreen = {
 	/**
 	 * Title of your result
 	 */
-	title?: string;
+	title: string;
 
 	/**
 	 * Subtitle of your result
@@ -60,9 +56,14 @@ export declare type CerebroScreen = {
 	term?: string;
 
 	/**
-	 * Text, that will be copied to clipboard using `cmd+c`, when your result is focused.
+	 * Text that will be copied to clipboard using `cmd+c` when your result is focused.
 	 */
 	clipboard?: string;
+
+	/**
+	 * Order of the screen in the Cerebro screens list.
+	 */
+	order?: number;
 
 	/**
 	 * Function that returns preview for your result. Preview can be an html string or React component
@@ -112,26 +113,26 @@ export type CerebroActions = {
 	/**
 	 * Open external URL in browser or open local file
 	 */
-	open: (path: string) => void;
+	readonly open: (path: string) => void;
 	/**
 	 * Reveal file in finder
 	 */
-	reveal: (path: string) => void;
+	readonly reveal: (path: string) => void;
 	/**
 	 * Copy text to clipboard
 	 */
-	copyToClipboard: (text: string) => void;
+	readonly copyToClipboard: (text: string) => void;
 	/**
 	 * Replace text in main Cerebro input
 	 */
-	replaceTerm: (text: string) => void;
+	readonly replaceTerm: (text: string) => void;
 	/**
 	 * Hide main Cerebro window
 	 */
-	hideWindow: () => void;
+	readonly hideWindow: () => void;
 };
 
-/**
- * Contains user provided values of all specified settings keys
- */
-//export module CerebroSettings {}
+export type CerebroConfig = {
+	get: (settingName: string) => object;
+	set: (settingName: string, content: object) => void;
+};

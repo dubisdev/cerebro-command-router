@@ -4,7 +4,7 @@ import {
 	routeConfig,
 	CerebroDisplayFunction,
 	CerebroHideFunction,
-} from "definitions";
+} from "./definitions";
 
 export default class CerebroRouter {
 	private shownPages;
@@ -30,60 +30,64 @@ export default class CerebroRouter {
 			isAsyncArrayGenerator = false,
 			loadingMessage = "Getting Async Screens...",
 			displayArrayGenerator,
-		}: routeConfig
+		}: routeConfig = {}
 	) {
-		if (this.isMatch(subcommand, this.term)) {
-			// generate autocompleted text (depends on config option autocompleteAll)
-			const autocompleteText = autocompleteAll
-				? this.command +
-				  " " +
-				  subcommand +
-				  " " +
-				  (getSubCommandText(this.term) || "")
-				: this.command + " " + subcommand + " ";
+		const autocompleteText = autocompleteAll
+			? this.command +
+			  " " +
+			  subcommand +
+			  " " +
+			  (getSubCommandText(this.term) || "")
+			: this.command + " " + subcommand + " ";
 
-			// if not show only in full match then show just now, no more checks needed ;)
+		// si solo coincide el comando principal: mostrar las opciones (a no ser que sea necesario full match)
+		// el título de la preview es el de la screen que se le proporciona al inicio
+
+		if (
+			this.isMatch(subcommand, this.term) &&
+			!this.isFullMatch(subcommand, this.term)
+		) {
 			if (!showOnlyInFullMatch) {
+				this.display({ ...screen, term: autocompleteText });
+				++this.shownPages;
+			}
+			return;
+		}
+
+		if (
+			this.isMatch(subcommand, this.term) &&
+			this.isFullMatch(subcommand, this.term)
+		) {
+			// if no array generator, just return initial screen
+			if (!displayArrayGenerator) {
 				this.display({ ...screen, term: autocompleteText });
 				++this.shownPages;
 				return;
 			}
 
-			// if is not full match and full match is needed
-			if (!this.isFullMatch(subcommand, this.term)) {
-				// const { icon, title } = screen;
+			const { icon } = screen;
+			if (isAsyncArrayGenerator) {
+				// show a loading display while displays are being generated
+				const id = Math.random() * 10;
+				this.display({ id: `${id}`, icon, title: loadingMessage });
+				++this.shownPages;
 
-				// this.display({ icon, title, term: autocompleteText });
-				// ++this.shownPages;
-				return;
-			}
+				const displayArray = await displayArrayGenerator();
+				this.hide(`${id}`);
+				--this.shownPages;
 
-			// if is full match and full match is needed
-			if (this.isFullMatch(subcommand, this.term)) {
-				const { icon } = screen;
-				if (isAsyncArrayGenerator) {
-					// show a loading display while displays are being generated
-					const id = Math.random() * 10;
-					this.display({ id: `${id}`, icon, title: loadingMessage });
+				displayArray.forEach((display) => {
+					this.display({ icon, ...display });
 					++this.shownPages;
+				});
+			} else {
+				const displayArray = await displayArrayGenerator();
+				displayArray.forEach((display) => {
+					this.display({ icon, ...display });
+					++this.shownPages;
+				});
 
-					const displayArray = await displayArrayGenerator();
-					this.hide(`${id}`);
-					--this.shownPages;
-
-					displayArray.forEach((display) => {
-						this.display({ icon, ...display });
-						++this.shownPages;
-					});
-				} else {
-					const displayArray = await displayArrayGenerator();
-					displayArray.forEach((display) => {
-						this.display({ icon, ...display });
-						++this.shownPages;
-					});
-
-					return;
-				}
+				return;
 			}
 		}
 	}
